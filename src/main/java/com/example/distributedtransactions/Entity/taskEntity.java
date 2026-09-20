@@ -1,13 +1,12 @@
 package com.example.distributedtransactions.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
-public class TaskEntity {
+public class taskEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
