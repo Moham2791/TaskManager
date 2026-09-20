@@ -9,11 +9,13 @@ public class TaskBuilder {
     String taskType;
 
 
-    public void taskBuilder(String Name, String id,String type){
+    public String taskBuilder(String Name, String id, String type) {
 
         Utils utils = new Utils();
         utils.checkName(Name);
-
+        utils.checkTaskType(type);
+        utils.checkTaskId(id);
+        return taskName;
 
 
     }
