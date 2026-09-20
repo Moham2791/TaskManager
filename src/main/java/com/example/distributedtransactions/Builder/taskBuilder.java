@@ -1,27 +1,21 @@
 package com.example.distributedtransactions.Builder;
 
-import com.example.distributedtransactions.Utils.utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.distributedtransactions.Entity.Task;
 
 public class taskBuilder {
 
     String taskName;
-    String taskId;
+    long taskId;
     String taskType;
-    @Autowired
+    String taskStatus;
 
 
-    public String taskBuilder(String Name, String id, String type) {
-
-        utils utils = new utils();
-        // Validations
-        utils.checkName(Name);
-        utils.checkTaskType(type);
-        utils.checkTaskId(id);
-
-
-        return taskName;
-
-
+    public Task taskBuilder(String taskName, long taskId, String taskType, String taskStatus) {
+        Task buildTask = new Task();
+        buildTask.payload = taskName;
+        buildTask.id = taskId;
+        buildTask.taskType = taskType;
+        buildTask.status = taskStatus;
+        return buildTask;
     }
 }
