@@ -13,6 +13,7 @@ public class RetrieveTaskService {
     TaskRepository taskRepository;
 
     public TaskEntity getTask(Long id) {
+
         TaskEntity task = taskRepository.findById(id).get();
 
         return task;

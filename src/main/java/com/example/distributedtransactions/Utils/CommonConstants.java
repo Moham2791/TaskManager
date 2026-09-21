@@ -10,4 +10,5 @@ public final class CommonConstants {
     public static final String Failed = "Failed";
     public static final String Success = "Success";
     public static final String Done = "Done";
+    public static final String Deleted = "Deleted";
 }
