@@ -1,6 +1,6 @@
 # Distributed Task Queue System
 
-A reliable, production-grade task queue built from scratch with Java, Spring Boot, and PostgreSQL.
+A reliable, production-grade taskEntity queue built from scratch with Java, Spring Boot, and PostgreSQL.
 
 ## What It Does
 
@@ -15,7 +15,7 @@ If fails, retry 3x
 ## Architecture
 
 - **API Layer** — REST endpoints to submit and check tasks
-- **Service Layer** — Business logic for task submission, processing, retries
+- **Service Layer** — Business logic for taskEntity submission, processing, retries
 - **Database** — PostgreSQL with `tasks`, `workers`, `task_logs` tables
 - **Workers** — Background processes that poll DB and execute tasks
 
@@ -31,7 +31,7 @@ If fails, retry 3x
 ```bash
 # Clone repo
 git clone <repo>
-cd task-queue
+cd taskEntity-queue
 
 # Install PostgreSQL
 # Create database
@@ -45,7 +45,7 @@ java -jar worker.jar
 
 ## Usage
 
-**Submit a task:**
+**Submit a taskEntity:**
 
 POST /tasks
 {
@@ -58,7 +58,7 @@ POST /tasks
 GET /tasks/1
 
 
-**Retry a failed task:**
+**Retry a failed taskEntity:**
 
 POST /tasks/1/retry
 
