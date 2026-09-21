@@ -3,10 +3,10 @@ package com.example.distributedtransactions.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class utils {
+public class Utils {
 
 
-    private static final Logger log = LoggerFactory.getLogger(utils.class);
+    private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
     public String checkName(String name) {
 
