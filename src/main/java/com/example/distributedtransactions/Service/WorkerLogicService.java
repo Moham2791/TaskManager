@@ -31,6 +31,12 @@ public class WorkerLogicService {
         log.info("workerLogic start");
         log.info("Retreiving Task from Database");
 
+         //Step-0: Figure out a way to poll.
+        //Step 1 : Figure out how to make the get call to DB and Lock using JDBC
+        //Step2: Figure out how to make the get cal for the next task whne the current task is locked.
+        //Step3: Figure out a way to update the Tasks
+        // Step 4: Figure out a way to load workers
+
         TaskEntity task = retrieveTaskHelper.getTask(id);
         if (task == null) {
             log.info("Task with id {} doesn't exist, creating a new task ", id);
