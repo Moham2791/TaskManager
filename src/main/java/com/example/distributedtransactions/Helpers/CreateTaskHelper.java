@@ -1,7 +1,7 @@
 package com.example.distributedtransactions.Helpers;
 
 import com.example.distributedtransactions.Entity.TaskEntity;
-import com.example.distributedtransactions.Properties.TaskQueueproperties;
+import com.example.distributedtransactions.Properties.TaskQueueProperties;
 import com.example.distributedtransactions.Repository.TaskRepository;
 import com.example.distributedtransactions.Utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import static com.example.distributedtransactions.Utils.CommonConstants.Invalid_
 
 @Component
 @Service
-public class CreateTaskService {
+public class CreateTaskHelper {
     @Autowired
     private TaskRepository taskRepository;
     //create//update//retrieve//delete
     @Autowired
-    private TaskQueueproperties taskQueueProps;
+    private TaskQueueProperties taskQueueProps;
     // create task with all the required feilds used by controller method to send a reques to the DB
     public TaskEntity createTask(String payload, Long id, String status, String taskType, Integer retries) {
         Utils utils = new Utils();

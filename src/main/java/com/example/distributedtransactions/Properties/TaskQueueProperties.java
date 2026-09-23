@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "task-queue")
-public class TaskQueueproperties {
+public class TaskQueueProperties {
 
     private Integer retries;
 

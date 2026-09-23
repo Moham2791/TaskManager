@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Component
 @Service
-public class RetrieveTaskService {
+public class RetrieveTaskHelper {
     @Autowired
     TaskRepository taskRepository;
 

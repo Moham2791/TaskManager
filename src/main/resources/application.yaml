@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: DistributedTransactions
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO}
+    show-sql: ${JPA_SHOW_SQL}
+
+logging:
+  level:
+    org.hibernate.SQL: ${LOG_LEVEL}
+
+task-queue:
+  retries: ${TASK_RETRIES}

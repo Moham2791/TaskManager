@@ -3,6 +3,8 @@ package com.example.distributedtransactions.Helpers;
 import com.example.distributedtransactions.Entity.TaskEntity;
 import com.example.distributedtransactions.Repository.TaskRepository;
 import com.example.distributedtransactions.Utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,8 @@ import static com.example.distributedtransactions.Utils.CommonConstants.Invalid_
 
 @Component
 @Service
-public class UpdateTaskService {
+public class UpdateTaskHelper {
+    private static final Logger log = LoggerFactory.getLogger(UpdateTaskHelper.class);
     @Autowired
     private TaskRepository taskRepository;
 
@@ -30,7 +33,7 @@ public class UpdateTaskService {
             task.setRetries(retries);
             task.setCreatedAt(LocalDateTime.now());
             task.setUpdatedAt(LocalDateTime.now());
-            System.out.println("updateTask");
+            log.info("Task Updated with Id : " + id);
             return taskRepository.save(task);
         }
         return null;

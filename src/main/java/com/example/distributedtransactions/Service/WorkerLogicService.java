@@ -1,10 +1,10 @@
 package com.example.distributedtransactions.Service;
 
 import com.example.distributedtransactions.Entity.TaskEntity;
-import com.example.distributedtransactions.Helpers.CreateTaskService;
-import com.example.distributedtransactions.Helpers.DeleteTaskService;
-import com.example.distributedtransactions.Helpers.RetrieveTaskService;
-import com.example.distributedtransactions.Helpers.UpdateTaskService;
+import com.example.distributedtransactions.Helpers.CreateTaskHelper;
+import com.example.distributedtransactions.Helpers.DeleteTaskHelper;
+import com.example.distributedtransactions.Helpers.RetrieveTaskHelper;
+import com.example.distributedtransactions.Helpers.UpdateTaskHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,37 +13,36 @@ import org.springframework.stereotype.Service;
 import static com.example.distributedtransactions.Utils.CommonConstants.*;
 
 @Service
-public class WorkerLogic {
+public class WorkerLogicService {
 
-    private static final Logger log = LoggerFactory.getLogger(WorkerLogic.class);
+    private static final Logger log = LoggerFactory.getLogger(WorkerLogicService.class);
     @Autowired
-    CreateTaskService createTaskService;
+    CreateTaskHelper createTaskHelper;
     @Autowired
-    DeleteTaskService deleteTaskService;
+    DeleteTaskHelper deleteTaskHelper;
     @Autowired
-    RetrieveTaskService retrieveTaskService;
+    RetrieveTaskHelper retrieveTaskHelper;
     @Autowired
-    UpdateTaskService updateTaskService;
+    UpdateTaskHelper updateTaskHelper;
 
     public void workerLogic(String payload, Long id, String status, String taskType, Integer retries) {
-        // Check if a task exists in the dataBase and if it does then it should check the status of the task
-        // if the task exists then it should update the task.
-        // before updating it should be checked whether another worker is already working on the task
-        // if another worker is already working on the task then it should drop and go to another task
+         // Workers will whenever pick a task they will lock the row so that other workers will not be able to pick up the same task causing rework.
+        // Polling should be used by the service to figure out if there is a new task in the database
         log.info("workerLogic start");
         log.info("Retreiving Task from Database");
 
-        TaskEntity task = retrieveTaskService.getTask(id);
+        TaskEntity task = retrieveTaskHelper.getTask(id);
         if (task == null) {
             log.info("Task with id {} doesn't exist, creating a new task ", id);
-            createTaskService.createTask(payload, id, status, taskType, retries);
+            createTaskHelper.createTask(payload, id, status, taskType, retries);
         } else {
-
+            //if the task exists get the status of the task and decide whether to update or leave it
             if (task.getStatus().equalsIgnoreCase(Ready)) {
                 log.info("Task {} with id {} is has ready to be picked up ", payload, id);
-                updateTaskService.updateTask(payload, id, In_Progress, taskType, retries);
+                updateTaskHelper.updateTask(payload, id, In_Progress, taskType, retries);
 
             } else if (task.getStatus().equalsIgnoreCase(In_Progress)) {
+
 
                 log.info("Task with id {} is has already been picked", id);
 

@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: DistributedTransactions
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task_queue
+    username: postgres
+    password: password123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+
+task-queue:
+  retries: 3

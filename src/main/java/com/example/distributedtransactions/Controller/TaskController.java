@@ -1,10 +1,10 @@
 package com.example.distributedtransactions.Controller;
 
 import com.example.distributedtransactions.Entity.TaskEntity;
-import com.example.distributedtransactions.Helpers.CreateTaskService;
-import com.example.distributedtransactions.Helpers.DeleteTaskService;
-import com.example.distributedtransactions.Helpers.RetrieveTaskService;
-import com.example.distributedtransactions.Helpers.UpdateTaskService;
+import com.example.distributedtransactions.Helpers.CreateTaskHelper;
+import com.example.distributedtransactions.Helpers.DeleteTaskHelper;
+import com.example.distributedtransactions.Helpers.RetrieveTaskHelper;
+import com.example.distributedtransactions.Helpers.UpdateTaskHelper;
 import com.example.distributedtransactions.Utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +19,13 @@ import static com.example.distributedtransactions.Utils.CommonConstants.Deleted;
 public class TaskController {
     private static final Logger log = LoggerFactory.getLogger(TaskController.class);
     @Autowired
-    private UpdateTaskService updateTaskService;
+    private UpdateTaskHelper updateTaskHelper;
     @Autowired
-    private RetrieveTaskService retrieveTaskService;
+    private RetrieveTaskHelper retrieveTaskHelper;
     @Autowired
-    private CreateTaskService createTaskService;
+    private CreateTaskHelper createTaskHelper;
     @Autowired
-    private DeleteTaskService deleteTaskService;
+    private DeleteTaskHelper deleteTaskHelper;
 
     @PostMapping("/payload/{payload}/Id/{Id}/createTask")
     public String createTask(
@@ -38,7 +38,7 @@ public class TaskController {
         Utils utils = new Utils();
         utils.checkName(payload);
         if (!utils.containsNumber(payload)) {
-            createTaskService.createTask(payload, id, status, taskType, retries);
+            createTaskHelper.createTask(payload, id, status, taskType, retries);
         }
         return "Task Created with Id : " + id.toString();
 
@@ -50,7 +50,7 @@ public class TaskController {
             @PathVariable Long id) {
 
         log.info("Retreiving Task from Database");
-        TaskEntity task = retrieveTaskService.getTask(id);
+        TaskEntity task = retrieveTaskHelper.getTask(id);
         return task;
     }
 
@@ -64,13 +64,13 @@ public class TaskController {
             @RequestBody Integer retries) {
 
         log.info("Retreiving Task from Database");
-        TaskEntity task = retrieveTaskService.getTask(id);
+        TaskEntity task = retrieveTaskHelper.getTask(id);
 
 
         Utils utils = new Utils();
         utils.checkName(payload);
         if (!utils.containsNumber(payload)) {
-            updateTaskService.updateTask(payload, id, status, taskType, retries);
+            updateTaskHelper.updateTask(payload, id, status, taskType, retries);
         }
         return task;
     }
@@ -86,12 +86,12 @@ public class TaskController {
             @RequestBody Integer retries) {
 
         log.info("Retreiving Task from Database");
-        TaskEntity task = retrieveTaskService.getTask(id);
+        TaskEntity task = retrieveTaskHelper.getTask(id);
 
         Utils utils = new Utils();
         utils.checkName(payload);
         if (!utils.containsNumber(payload)) {
-            deleteTaskService.deleteTask(id);
+            deleteTaskHelper.deleteTask(id);
         }
         return Deleted;
     }
