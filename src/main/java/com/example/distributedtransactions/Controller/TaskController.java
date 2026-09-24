@@ -1,16 +1,17 @@
 package com.example.distributedtransactions.Controller;
 
 import com.example.distributedtransactions.Entity.TaskEntity;
-import com.example.distributedtransactions.Helpers.CreateTaskHelper;
 import com.example.distributedtransactions.Helpers.DeleteTaskHelper;
 import com.example.distributedtransactions.Helpers.RetrieveTaskHelper;
 import com.example.distributedtransactions.Helpers.UpdateTaskHelper;
+import com.example.distributedtransactions.Models.CreateTaskRequest;
+import com.example.distributedtransactions.Repository.TaskRepository;
+import com.example.distributedtransactions.Service.WorkerLogicService;
 import com.example.distributedtransactions.Utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.ServerRequest;
 
 import static com.example.distributedtransactions.Utils.CommonConstants.Deleted;
 
@@ -19,80 +20,70 @@ import static com.example.distributedtransactions.Utils.CommonConstants.Deleted;
 public class TaskController {
     private static final Logger log = LoggerFactory.getLogger(TaskController.class);
     @Autowired
-    private UpdateTaskHelper updateTaskHelper;
-    @Autowired
     private RetrieveTaskHelper retrieveTaskHelper;
     @Autowired
-    private CreateTaskHelper createTaskHelper;
-    @Autowired
     private DeleteTaskHelper deleteTaskHelper;
+    @Autowired
+    private WorkerLogicService workerLogicService;
+    @Autowired
+    private UpdateTaskHelper updateTaskHelper;
+    @Autowired
+    TaskRepository taskRepository;
 
-    @PostMapping("/payload/{payload}/Id/{Id}/createTask")
+    @PostMapping("/payload/{payload}/id/{id}/createTask")
     public String createTask(
-            @RequestHeader ServerRequest.Headers header,
             @PathVariable String payload,
             @PathVariable Long id,
-            @RequestBody String status,
-            @RequestBody String taskType,
-            @RequestBody Integer retries) {
+            @RequestBody CreateTaskRequest createTaskRequest) {
         Utils utils = new Utils();
         utils.checkName(payload);
         if (!utils.containsNumber(payload)) {
-            createTaskHelper.createTask(payload, id, status, taskType, retries);
+            workerLogicService.workerLogic(payload, id, createTaskRequest.getStatus(),
+                    createTaskRequest.getTaskType(), createTaskRequest.getRetries());
         }
-        return "Task Created with Id : " + id.toString();
+        return "Task Created with id : " + id.toString();
 
     }
 
-    @GetMapping("/payload/{payload}/Id/{Id}/retrieveTask")
+    @GetMapping("id/{id}/retrieveTask")
     public TaskEntity getTask(
-            @RequestHeader ServerRequest.Headers header,
             @PathVariable Long id) {
-
         log.info("Retreiving Task from Database");
         TaskEntity task = retrieveTaskHelper.getTask(id);
         return task;
     }
 
-    @PutMapping("/payload/{payload}/Id/{Id}/updateTask")
-    public TaskEntity updateTask(
-            @RequestHeader ServerRequest.Headers header,
+    @GetMapping("id/{id}/retrieveTaskName")
+    public String getTaskName(
+            @PathVariable Long id) {
+        log.info("Retreiving Task from Database");
+        TaskEntity task = taskRepository.findById(id).orElse(null);
+        String taskName = task.getPayload().toString();
+        return taskName;
+    }
+
+    @PutMapping("/payload/{payload}/id/{id}/updateTask")
+    public String UpdateTask(
             @PathVariable String payload,
             @PathVariable Long id,
-            @RequestBody String status,
-            @RequestBody String taskType,
-            @RequestBody Integer retries) {
+            @RequestBody CreateTaskRequest createTaskRequest) {
 
         log.info("Retreiving Task from Database");
-        TaskEntity task = retrieveTaskHelper.getTask(id);
-
-
         Utils utils = new Utils();
         utils.checkName(payload);
+        String status="";
         if (!utils.containsNumber(payload)) {
-            updateTaskHelper.updateTask(payload, id, status, taskType, retries);
+            status= updateTaskHelper.updateTask(payload, id, createTaskRequest.getStatus(),
+                    createTaskRequest.getTaskType(), createTaskRequest.getRetries());
         }
-        return task;
+        return status;
     }
 
 
-    @DeleteMapping("/Id/{Id}/deleteTask")
+    @DeleteMapping("/id/{id}/deleteTask")
     public String deleteTask(
-            @RequestHeader ServerRequest.Headers header,
-            @PathVariable String payload,
-            @PathVariable Long id,
-            @RequestBody String status,
-            @RequestBody String taskType,
-            @RequestBody Integer retries) {
-
-        log.info("Retreiving Task from Database");
-        TaskEntity task = retrieveTaskHelper.getTask(id);
-
-        Utils utils = new Utils();
-        utils.checkName(payload);
-        if (!utils.containsNumber(payload)) {
-            deleteTaskHelper.deleteTask(id);
-        }
+            @PathVariable Long id) {
+        deleteTaskHelper.deleteTask(id);
         return Deleted;
     }
 }

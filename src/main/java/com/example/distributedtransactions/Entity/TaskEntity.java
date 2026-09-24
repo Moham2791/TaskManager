@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "tasks")
 public class TaskEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     public String payload;
     public String status;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 import static com.example.distributedtransactions.Utils.CommonConstants.Invalid_Payload;
+import static com.example.distributedtransactions.Utils.CommonConstants.TaskUpdated;
 
 @Component
 @Service
@@ -21,12 +22,12 @@ public class UpdateTaskHelper {
     private TaskRepository taskRepository;
 
     //create//update//retrieve//delete
-    public TaskEntity updateTask(String payload, Long id, String status, String taskType, Integer retries) {
+    public String updateTask(String payload, Long id, String status, String taskType, Integer retries) {
         Utils utils = new Utils();
         String check = utils.checkName(payload);
 
         if (!check.equalsIgnoreCase(Invalid_Payload)) {
-            TaskEntity task = new TaskEntity();
+            TaskEntity task = taskRepository.findById(id).orElse(null);
             task.setPayload(payload);
             task.setStatus(status);
             task.setTaskType(taskType);
@@ -34,7 +35,8 @@ public class UpdateTaskHelper {
             task.setCreatedAt(LocalDateTime.now());
             task.setUpdatedAt(LocalDateTime.now());
             log.info("Task Updated with Id : " + id);
-            return taskRepository.save(task);
+            taskRepository.save(task);
+            return TaskUpdated;
         }
         return null;
 

@@ -27,6 +27,7 @@ public class CreateTaskHelper {
 
         if (!check.equalsIgnoreCase(Invalid_Payload)) {
             TaskEntity task = new TaskEntity();
+            task.setId(id);
             task.setPayload(payload);
             task.setStatus(status);
             task.setTaskType(taskType);

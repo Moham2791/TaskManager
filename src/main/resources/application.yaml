@@ -9,6 +9,9 @@ spring:
     hibernate:
       ddl-auto: ${JPA_DDL_AUTO}
     show-sql: ${JPA_SHOW_SQL}
+  web:
+    resources:
+      add-mappings: true
 
 logging:
   level:
@@ -16,3 +19,12 @@ logging:
 
 task-queue:
   retries: ${TASK_RETRIES}
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+

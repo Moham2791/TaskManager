@@ -33,7 +33,7 @@ public class WorkerLogicService {
 
          //Step-0: Figure out a way to poll.
         //Step 1 : Figure out how to make the get call to DB and Lock using JDBC
-        //Step2: Figure out how to make the get cal for the next task whne the current task is locked.
+        //Step2: Figure out how to make the get cal for the next task when  the current task is locked.
         //Step3: Figure out a way to update the Tasks
         // Step 4: Figure out a way to load workers
 
@@ -55,7 +55,7 @@ public class WorkerLogicService {
             } else if (task.getStatus().equalsIgnoreCase(Done)) {
 
                 log.info("Task with id {} has been successfully completed. Moving to the next task", id);
-                return;
+
 
             }
 
