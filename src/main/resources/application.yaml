@@ -5,6 +5,8 @@ spring:
     url: ${DATABASE_URL}
     username: ${DATABASE_USER}
     password: ${DATABASE_PASSWORD}
+    hikari:
+        maximum-pool-size: 20  # connection pool
   jpa:
     hibernate:
       ddl-auto: ${JPA_DDL_AUTO}
@@ -13,9 +15,14 @@ spring:
     resources:
       add-mappings: true
 
+
 logging:
   level:
     org.hibernate.SQL: ${LOG_LEVEL}
+    org.springframework.web: DEBUG
+    org.springframework.transaction: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    com.example.distributedtransactions: DEBUG
 
 task-queue:
   retries: ${TASK_RETRIES}
@@ -26,5 +33,6 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /v3/api-docs
+
 
 

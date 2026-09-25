@@ -1,8 +1,11 @@
 package com.example.distributedtransactions.Entity;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(name = "tasks")
@@ -87,4 +90,6 @@ public class TaskEntity {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }
+

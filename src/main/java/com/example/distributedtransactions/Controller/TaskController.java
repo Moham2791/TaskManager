@@ -38,7 +38,7 @@ public class TaskController {
         Utils utils = new Utils();
         utils.checkName(payload);
         if (!utils.containsNumber(payload)) {
-            workerLogicService.workerLogic(payload, id, createTaskRequest.getStatus(),
+            workerLogicService.processTask(payload, id, createTaskRequest.getStatus(),
                     createTaskRequest.getTaskType(), createTaskRequest.getRetries());
         }
         return "Task Created with id : " + id.toString();
