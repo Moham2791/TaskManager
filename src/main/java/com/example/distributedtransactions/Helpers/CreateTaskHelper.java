@@ -5,6 +5,7 @@ import com.example.distributedtransactions.Properties.TaskQueueProperties;
 import com.example.distributedtransactions.Repository.TaskRepository;
 import com.example.distributedtransactions.Utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class CreateTaskHelper {
         Utils utils = new Utils();
         String check = utils.checkName(payload);
         if (!check.equalsIgnoreCase(Invalid_Payload)) {
-            TaskEntity task = new TaskEntity();
+       try{     TaskEntity task = new TaskEntity();
             task.setId(id);
             task.setPayload(payload);
             task.setStatus(status);
@@ -35,7 +36,10 @@ public class CreateTaskHelper {
             task.setCreatedAt(LocalDateTime.now());
             task.setUpdatedAt(LocalDateTime.now());
 
-            return taskRepository.save(task);
+            return taskRepository.save(task);}
+       catch (DataIntegrityViolationException e) {
+
+       }
         }
         return null;
 

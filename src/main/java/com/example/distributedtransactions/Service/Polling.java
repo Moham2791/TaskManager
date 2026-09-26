@@ -24,7 +24,7 @@ public class Polling {
 
     @Scheduled(fixedRate = 1000)
     public void polling() {
-        TaskEntity task = taskRepository.findFirstPendingTask();
+        TaskEntity task = retrieveTaskHelper.getFirstPendingTask();
         log.info("Polling fired");
         if (task != null && task.getStatus() != null && task.getStatus().equalsIgnoreCase(Pending)) {
             try {
