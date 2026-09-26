@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
-    @Query(value = "SELECT * FROM tasks WHERE status = 'PENDING' LIMIT 1 FOR UPDATE SKIP LOCKED", nativeQuery = true)
+    @Query(value = "SELECT * FROM tasks WHERE status = 'pending' LIMIT 1 FOR UPDATE SKIP LOCKED", nativeQuery = true)
     @Transactional(readOnly = false)
     TaskEntity findFirstPendingTask();
 
