@@ -7,10 +7,12 @@ public final class CommonConstants {
     public static final String Invalid_Payload = "invalid name format";
     public static final String In_Progress = "inProgress";
     public static final String Ready = "Ready";
-    public static final String Pending="Pending";
+    public static final String Pending = "Pending";
     public static final String Failed = "Failed";
     public static final String Success = "Success";
     public static final String Done = "Done";
     public static final String Deleted = "Deleted";
-    public static final String TaskUpdated="TaskUpdated";
+    public static final String TaskUpdated = "TaskUpdated";
+    public static final Long Thread_Time_Millis = 3000L;
+    public static final String RetriesExceeded = "RetriesExceeded";
 }

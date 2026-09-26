@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.example.distributedtransactions.Utils.CommonConstants.*;
-
 @Service
 public class WorkerLogicService {
 
@@ -28,18 +26,20 @@ public class WorkerLogicService {
     @Autowired
     TaskRepository taskRepository;
 
-    public void processTask(String payload, Long id, String status, String taskType, Integer retries) {
 
-        //@Scheduled polls DB for first PENDING unlocked task
-        //If thread pool has capacity, submit to @Async worker
-        //If thread pool is full, skip — task stays PENDING in DB
-        //Next schedule cycle picks it up
-        //Worker locks row, processes, updates status to DONE, releases loc
+    public TaskEntity createTask(String payload, Long id, String status, String taskType, Integer retries) {
+        log.info("Retreiving Task from Database");
+        TaskEntity task = retrieveTaskHelper.getTask(id);
+        if (task == null) {
+            log.info("Task with id {} doesn't exist, creating a new task ", id);
+            return createTaskHelper.createTask(payload, id, status, taskType, retries);
+        } else {
 
+            log.info("Task with id {} already exist, creating a new task ", id);
+            return createTaskHelper.createTask(payload, id, status, taskType, retries);
+        }
 
 
     }
-
-
 }
 

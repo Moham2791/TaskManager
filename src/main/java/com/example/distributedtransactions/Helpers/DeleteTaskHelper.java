@@ -18,7 +18,7 @@ public class DeleteTaskHelper {
     public String deleteTask(Long id) {
         log.info("Deleting Task with Id : " + id);
         taskRepository.deleteById(id);
-       return "The task has been deleted";
+        return "The task has been deleted";
     }
 
 

@@ -2,6 +2,12 @@ package com.example.distributedtransactions.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
+
+import static com.example.distributedtransactions.Utils.CommonConstants.RetriesExceeded;
 
 public class Utils {
 
@@ -58,6 +64,19 @@ public class Utils {
             return false;
         }
         return input.chars().allMatch(Character::isDigit);
+    }
+
+    public CompletableFuture<String> retry(int retries, Supplier<CompletableFuture<String>> operation) {
+        if (retries == 0) {
+            log.info("Retry limit exceeded");
+            return CompletableFuture.completedFuture(RetriesExceeded);
+        }
+        try {
+            return operation.get();
+        } catch (DataAccessException e) {
+            log.warn("Retrying... attempts left: {}", retries - 1);
+            return retry(retries - 1, operation);
+        }
     }
 
 }

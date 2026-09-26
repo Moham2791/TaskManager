@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 import static com.example.distributedtransactions.Utils.CommonConstants.Deleted;
 
 @RestController
@@ -38,7 +40,7 @@ public class TaskController {
         Utils utils = new Utils();
         utils.checkName(payload);
         if (!utils.containsNumber(payload)) {
-            workerLogicService.processTask(payload, id, createTaskRequest.getStatus(),
+            workerLogicService.createTask(payload, id, createTaskRequest.getStatus(),
                     createTaskRequest.getTaskType(), createTaskRequest.getRetries());
         }
         return "Task Created with id : " + id.toString();
@@ -63,7 +65,7 @@ public class TaskController {
     }
 
     @PutMapping("/payload/{payload}/id/{id}/updateTask")
-    public String UpdateTask(
+    public CompletableFuture<String> UpdateTask(
             @PathVariable String payload,
             @PathVariable Long id,
             @RequestBody CreateTaskRequest createTaskRequest) {
@@ -71,9 +73,9 @@ public class TaskController {
         log.info("Retreiving Task from Database");
         Utils utils = new Utils();
         utils.checkName(payload);
-        String status="";
+        CompletableFuture<String> status = new CompletableFuture<>();
         if (!utils.containsNumber(payload)) {
-            status= updateTaskHelper.updateTask(payload, id, createTaskRequest.getStatus(),
+            status = updateTaskHelper.updatePickedTask(payload, id, createTaskRequest.getStatus(),
                     createTaskRequest.getTaskType(), createTaskRequest.getRetries());
         }
         return status;

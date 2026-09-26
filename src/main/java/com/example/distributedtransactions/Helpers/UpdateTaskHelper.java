@@ -9,22 +9,53 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
-import static com.example.distributedtransactions.Utils.CommonConstants.Invalid_Payload;
-import static com.example.distributedtransactions.Utils.CommonConstants.TaskUpdated;
+import static com.example.distributedtransactions.Utils.CommonConstants.*;
 
-@Component
 @Service
 public class UpdateTaskHelper {
     private static final Logger log = LoggerFactory.getLogger(UpdateTaskHelper.class);
     @Autowired
     private TaskRepository taskRepository;
 
-    //create//update//retrieve//delete
+    @Async
+    @Transactional
+    public CompletableFuture<String> updatePickedTask(String payload, Long id, String status, String taskType, Integer retries) {
+        TaskEntity task = taskRepository.findByIdWithLock(id).orElse(null);
+        Utils utils = new Utils();
+        String check = utils.checkName(task.getPayload());
+
+        if (!check.equalsIgnoreCase(Invalid_Payload)) {
+            task.setStatus(Done);
+            task.setTaskType(taskType);
+            task.setUpdatedAt(LocalDateTime.now());
+            log.info("Task Updated with Id : " + id);
+            try {
+                log.info("Processing task Id={} payload={}", id, payload);
+                Thread.sleep(Thread_Time_Millis);
+                return utils.retry(retries, () -> {
+                    taskRepository.save(task);
+                    return CompletableFuture.completedFuture(TaskUpdated);
+                });
+            } catch (InterruptedException e) {
+                log.error("Task interrupted Id={}", id);
+            } catch (DataAccessException e) {
+                log.info("Update Task Failed Id={} Details={}", id, e.getMessage());
+                return utils.retry(retries, () -> updatePickedTask(payload, id, status, taskType, retries));
+            }
+            return CompletableFuture.completedFuture(TaskUpdated);
+        }
+        return CompletableFuture.completedFuture(Failed);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This method is un-used
+    /*   //create//update//retrieve//delete
     public String updateTask(String payload, Long id, String status, String taskType, Integer retries) {
         Utils utils = new Utils();
         String check = utils.checkName(payload);
@@ -35,7 +66,6 @@ public class UpdateTaskHelper {
             task.setStatus(status);
             task.setTaskType(taskType);
             task.setRetries(retries);
-            task.setCreatedAt(LocalDateTime.now());
             task.setUpdatedAt(LocalDateTime.now());
             log.info("Task Updated with Id : " + id);
             taskRepository.save(task);
@@ -43,44 +73,7 @@ public class UpdateTaskHelper {
         }
         return null;
 
-    }
-
-    public String updatePickedTask_Retry(String payload, Long id, String status, String taskType, Integer retries) {
-        if (retries == 0) {
-            log.info("Retry limit exceeded for Task with Payload ={} and id={}. Please try again", payload, id);
-            return "Retries Exceded,Please Retry Again";
-        }
-        retries -= 1;
-        return updatePickedTask(payload, id, status, taskType, retries);
-    }
-
-    @Async
-    @Transactional
-    public String updatePickedTask(String payload, Long id, String status, String taskType, Integer retries) {
-        TaskEntity task = taskRepository.findById(id).orElse(null);
-        Utils utils = new Utils();
-        String check = utils.checkName(payload);
-
-        if (!check.equalsIgnoreCase(Invalid_Payload)) {
-
-            task.setPayload(payload);
-            task.setStatus(status);
-            task.setTaskType(taskType);
-            task.setCreatedAt(LocalDateTime.now());
-            task.setUpdatedAt(LocalDateTime.now());
-            log.info("Task Updated with Id : " + id);
-            try {
-                taskRepository.save(task);
-            } catch (DataAccessException e) {
-                log.info("Update Task Failed with Id={},payload={},Exception Details={} , IncidentDetails ={}  ", id, payload, e.getMessage(), e.getCause());
-                return updatePickedTask_Retry(payload, id, status, taskType, retries);
-
-            }
-            return TaskUpdated;
-        }
-        return null;
-
-    }
+    }*/
 
 
 }

@@ -20,11 +20,11 @@ public class CreateTaskHelper {
     //create//update//retrieve//delete
     @Autowired
     private TaskQueueProperties taskQueueProps;
+
     // create task with all the required feilds used by controller method to send a reques to the DB
     public TaskEntity createTask(String payload, Long id, String status, String taskType, Integer retries) {
         Utils utils = new Utils();
         String check = utils.checkName(payload);
-
         if (!check.equalsIgnoreCase(Invalid_Payload)) {
             TaskEntity task = new TaskEntity();
             task.setId(id);

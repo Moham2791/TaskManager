@@ -1,11 +1,10 @@
 package com.example.distributedtransactions.Entity;
 
-import jakarta.persistence.*;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.repository.query.Param;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 @Table(name = "tasks")
